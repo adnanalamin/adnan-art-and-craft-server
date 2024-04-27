@@ -25,19 +25,39 @@ async function run() {
     await client.connect();
 
     const craftItems = client.db("artAndCraft").collection("Craft");
+    const subcategoryItems = client.db("artAndCraft").collection("subcategory");
 
     app.get("/artandcraft", async (req, res) => {
       const cursor = craftItems.find();
       const result = await cursor.toArray();
       res.send(result);
     });
-
-    app.get("/artandcraft/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await craftItems.findOne(query);
+    app.get("/subcategoryProduct", async (req, res) => {
+      const cursor = subcategoryItems.find();
+      const result = await cursor.toArray();
       res.send(result);
     });
+
+    app.get("/artandcraft/:email", async (req, res) => {
+      const newemail = req.params.email;
+      const query = { userEmail: newemail };
+      const cursor = craftItems.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/allartandcraft/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      console.log(query)
+      const result = await craftItems.findOne(query);
+      console.log(result)
+      res.send(result);
+    });
+
+    
+
+   
 
     app.post("/artandcraft", async (req, res) => {
       const newCraft = req.body;
