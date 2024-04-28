@@ -48,7 +48,7 @@ async function run() {
 
     app.get("/subcategoryProduct/:subcategory", async (req, res) => {
       const newcategory = req.params.subcategory;
-      console.log(newcategory)
+      console.log(newcategory);
       const query = { subcategory_Name: newcategory };
       const cursor = craftItems.find(query);
       const result = await cursor.toArray();
@@ -57,20 +57,39 @@ async function run() {
 
     app.get("/allartandcraft/:id", async (req, res) => {
       const id = req.params.id;
+      console.log(id);
       const query = { _id: new ObjectId(id) };
-      console.log(query)
+      console.log(query);
       const result = await craftItems.findOne(query);
-      console.log(result)
+      console.log(result);
       res.send(result);
     });
-
-    
-
-   
 
     app.post("/artandcraft", async (req, res) => {
       const newCraft = req.body;
       const result = await craftItems.insertOne(newCraft);
+      res.send(result);
+    });
+
+    app.put("/updateartandcraft/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedData = req.body;
+      const craftitems = {
+        $set: {
+          productName: updatedData.productName,
+          subcategory_Name: updatedData.subcategory_Name,
+          rating: updatedData.rating,
+          price: updatedData.price,
+          customaization: updatedData.customaization,
+          stock: updatedData.stock,
+          descriptions: updatedData.descriptions,
+          photo: updatedData.photo,
+          processingTime: updatedData.processingTime,
+        },
+      };
+      const result = await craftItems.updateOne(filter, craftitems, options);
       res.send(result);
     });
 
