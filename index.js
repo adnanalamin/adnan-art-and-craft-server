@@ -46,6 +46,15 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/subcategoryProduct/:subcategory", async (req, res) => {
+      const newcategory = req.params.subcategory;
+      console.log(newcategory)
+      const query = { subcategory_Name: newcategory };
+      const cursor = craftItems.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     app.get("/allartandcraft/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -62,6 +71,13 @@ async function run() {
     app.post("/artandcraft", async (req, res) => {
       const newCraft = req.body;
       const result = await craftItems.insertOne(newCraft);
+      res.send(result);
+    });
+
+    app.delete("/allartandcraft/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await craftItems.deleteOne(query);
       res.send(result);
     });
 
